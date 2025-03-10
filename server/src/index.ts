@@ -6,6 +6,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import * as dynamoose from "dynamoose";
 // routs imports
+import courseRouter from "./routes/courseRouter";
 
 
 // configrations
@@ -27,9 +28,16 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const port = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+})
+
+app.use("/courses", courseRouter);
+
+const port = process.env.PORT || 8002;
 if (!isProduction) {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 }
+

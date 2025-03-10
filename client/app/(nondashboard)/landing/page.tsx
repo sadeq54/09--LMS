@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCarousel } from '@/hooks/useCarousel'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetCoursesQuery } from '@/state/api'
 
 const LodingSkeleton = () => {
     return (
@@ -23,12 +24,12 @@ const LodingSkeleton = () => {
                 <Skeleton className='landing-skeleton__featured-description' />
                 <div className='landing-skeleton__tags'>
                     {[1, 2, 3, 4, 5].map((_, index) => (
-                        <Skeleton key={index} className='landing-skeleton__tag' />  
+                        <Skeleton key={index} className='landing-skeleton__tag' />
                     ))}
                 </div>
                 <div className='landing-skeleton__courses'>
                     {[1, 2, 3, 4, 5].map((_, index) => (
-                        <Skeleton key={index} className='landing-skeleton__course-card' />  
+                        <Skeleton key={index} className='landing-skeleton__course-card' />
                     ))}
                 </div>
             </div>
@@ -37,7 +38,10 @@ const LodingSkeleton = () => {
     )
 }
 export default function Landing() {
+
     const currentImage = useCarousel({ totalImages: 3 });
+    const { data: courses, isLoading, isError } = useGetCoursesQuery({});
+    console.log(courses)
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -103,11 +107,22 @@ export default function Landing() {
                     }
                 </div>
                 <div className='landing__courses'>
-                    {/*  */}
+                    {courses && courses.slice(0, 4).map((course, index) => (
+
+                        <motion.div
+                            key={course.courseId}
+                            initial={{ y: 50, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.5  , delay: index * 0.1 }}
+                            
+                            viewport={{  amount: 0.4 }}
+                        >
+                                <CourseCardSearch/>
+                        </motion.div>
+                    ))}
                 </div>
 
             </motion.div>
-
         </motion.div>
     )
 }
