@@ -1,13 +1,15 @@
-'use client'
-import React from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useCarousel } from '@/hooks/useCarousel'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useGetCoursesQuery } from '@/state/api'
+'use client';
 
-const LodingSkeleton = () => {
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useCarousel } from '@/hooks/useCarousel';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetCoursesQuery } from '@/state/api';
+import CourseCardSearch from '@/components/CourseCardSearch';
+import { useRouter } from 'next/navigation';
+
+ const LoadingSkeleton = () => {
     return (
         <div className='landing-skeleton'>
             <div className='landing-skeleton__hero'>
@@ -33,15 +35,29 @@ const LodingSkeleton = () => {
                     ))}
                 </div>
             </div>
-
         </div>
-    )
-}
-export default function Landing() {
+    );
+};
 
+export default function Landing() {
+    const router = useRouter();
     const currentImage = useCarousel({ totalImages: 3 });
     const { data: courses, isLoading, isError } = useGetCoursesQuery({});
-    console.log(courses)
+
+   
+    const handleCourseClick = (courseId: string) => {
+            router.push(`/search?id=${courseId}`);
+        
+    };
+
+    if (isLoading) {
+        return <LoadingSkeleton />;
+    }
+
+    if (isError) {
+        return <div>Error loading courses</div>;
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -62,11 +78,11 @@ export default function Landing() {
                     <p className='landing__description'>
                         This is the list of courses you can enroll in
                         <br />
-                        Cources when u need them and want them
+                        Courses when you need them and want them
                     </p>
                     <div className='landing__cta'>
                         <Link href={'/search'}>
-                            <div className='landing__cta-button'>search for the cousres</div>
+                            <div className='landing__cta-button'>Search for the courses</div>
                         </Link>
                     </div>
                 </div>
@@ -81,8 +97,7 @@ export default function Landing() {
                             sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                             className={`landing__hero-image ${index === currentImage ? 'landing__hero-image--active' : ''}`}
                         />
-                    ))
-                    }
+                    ))}
                 </div>
             </motion.div>
             <motion.div
@@ -103,26 +118,25 @@ export default function Landing() {
                         <span key={index} className="landing__tag">
                             {tag}
                         </span>
-                    ))
-                    }
+                    ))}
                 </div>
                 <div className='landing__courses'>
                     {courses && courses.slice(0, 4).map((course, index) => (
-
                         <motion.div
                             key={course.courseId}
                             initial={{ y: 50, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5  , delay: index * 0.1 }}
-                            
-                            viewport={{  amount: 0.4 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ amount: 0.4 }}
                         >
-                                <CourseCardSearch/>
+                            <CourseCardSearch
+                                course={course}
+                                onClick={() => handleCourseClick(course.courseId)}
+                            />
                         </motion.div>
                     ))}
                 </div>
-
             </motion.div>
         </motion.div>
-    )
+    );
 }
