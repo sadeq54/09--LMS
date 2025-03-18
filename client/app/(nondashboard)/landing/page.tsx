@@ -124,8 +124,8 @@ export default function Landing() {
                     {courses && courses.slice(0, 4).map((course, index) => (
                         <motion.div
                             key={course.courseId}
-                            initial={{ y: 50, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
+                            initial={{ y: 40, opacity: 0 }}
+                            whileInView={{ y: 0 , opacity: 1 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ amount: 0.4 }}
                         >

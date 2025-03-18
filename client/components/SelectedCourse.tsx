@@ -32,7 +32,7 @@ export default function SelectedCourse(
                     onClick={()=>handleEnrollNow(course.courseId)}
                     className='bg-purple-500 hover:bg-purple-700'
                     >
-                        Enroll Now
+                        Enroll Now  
                     </Button>
                 </div>
             </div>
